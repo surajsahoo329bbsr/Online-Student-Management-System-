@@ -1,0 +1,97 @@
+﻿@model List<WebAppMVC_College.models.Student>
+
+@{
+    ViewBag.Title = "Read";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<style>
+    h2 {
+        text-align: center;
+    }
+
+    .blue-link {
+        font-size: 18px;
+        color: #03A9F4;
+        text-decoration: none;
+    }
+
+        .blue-link:hover {
+            color: #01579B;
+            transition: 0.8s;
+            text-decoration: none;
+        }
+
+    table {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 25px;
+        box-shadow: 5px;
+        background-color: rgb(255, 255, 255);
+    }
+
+    tr, td, th {
+        border: 1px solid black;
+        padding: 10px;
+    }
+
+    body {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        background-image: url("/assets/img/read.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+</style>
+
+<div>
+    @if (ViewBag.Status == "deleted")
+    {
+        <h6 style="text-align:center">Student Record Deleted.</h6>
+        ViewBag.Status = null;
+    }
+</div>
+
+@if (Model.Count() == 0)
+{
+    <h2 style="text-align:center">Sorry, no records exist.</h2>
+}
+else
+{
+    <table>
+        <tr>
+            <th>Student Id</th>
+            <th>Student Name</th>
+            <th>Phone Number</th>
+            <th>Gender</th>
+            <th>Admin Id</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (WebAppMVC_College.models.Student student in Model)
+        {
+            <tr>
+                <td>@student.StudentId</td>
+                <td>@student.StudentName</td>
+                <td>@student.StudentPhoneNo</td>
+                @if (student.StudentGender == "M")
+                {
+                    <td>Male</td>
+                }
+                else
+                {
+                    <td>Female</td>
+                }
+                <td>@student.AdminId</td>
+                <td><a href="@Url.Action("Update","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Update</a></td>
+                <td><a href="@Url.Action("Delete","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Delete</a></td>
+            </tr>
+        }
+
+    </table>
+}
+

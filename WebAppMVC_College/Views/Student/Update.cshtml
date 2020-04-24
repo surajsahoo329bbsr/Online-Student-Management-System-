@@ -1,7 +1,7 @@
 ﻿@model WebAppMVC_College.models.Student
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Update";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
 }
 
@@ -105,25 +105,22 @@
 
     body {
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        background-image: url("/assets/img/create.jpg");
-        background-size: cover;
+        background-image: url("/assets/img/update.jpg");
+        background-size: 100%;
         background-repeat: no-repeat;
     }
 </style>
 
 <div class="card">
-    @if (ViewBag.Status == "deleted")
+    <h2 style="font-size:40px; margin-left:20px; font-weight: bold;">Update</h2>
+    @using (Html.BeginForm("Update", "Student", FormMethod.Post))
     {
-        <h6 style="text-align:center">Student Record Deleted.</h6>
-    }
-    <h2 style="font-size:40px; margin-left:20px; font-weight: bold;">Create</h2>
-    @using (Html.BeginForm("Create", "Student", FormMethod.Post))
-    {
+        <input type="text" id="StudentId" name="StudentId" value="@Model.StudentId" hidden />
         <table align="center" style="margin-top:20px;margin-bottom:20px;">
             <tr>
                 <td>
                     <div class="input-group">
-                        <input type="text" id="StudentName" name="StudentName" class="input-area" pattern="^[a-zA-Z ]{1-50}$" required />
+                        <input type="text" id="StudentName" name="StudentName" class="input-area" pattern="^[a-zA-Z ]{1-50}$" value="@Model.StudentName" required/>
                         <label for="StudentName" class="label">Name</label>
                     </div>
                 </td>
@@ -132,7 +129,7 @@
             <tr>
                 <td>
                     <div class="input-group">
-                        <input type="text" id="StudentPhoneNo" name="StudentPhoneNo" class="input-area" pattern="^[789]{1}[0-9]{9}$" required />
+                        <input type="text" id="StudentPhoneNo" name="StudentPhoneNo" class="input-area" pattern="^[789]{1}[0-9]{9}$" value="@Model.StudentPhoneNo" required />
                         <label for="StudentPhoneNo" class="label">Phone Number</label>
                     </div>
                 </td>
@@ -143,26 +140,41 @@
             </tr>
             <tr>
                 <td style="font-size:20px;">
-                    &nbsp; <input type="radio" name="StudentGender" value="M" required  /> Male
-                    &nbsp; &nbsp; <input type="radio" name="StudentGender" value="F" required /> Female
+                    &nbsp;
+                    @if (Model.StudentGender == "M")
+                    {
+                        <input type="radio" id="Male" name="StudentGender" value="M" checked required />
+                        <label for="Male">Male&nbsp;&nbsp;</label>
+                        <input type="radio" id="Female" name="StudentGender" value="F" required />
+                        <label for="Female">Female</label>
+
+                    }
+                    @if (Model.StudentGender == "F")
+                    {
+                        <input type="radio" id="Male" name="StudentGender" value="M" required />
+                        <label for="Male">Male&nbsp;&nbsp;</label>
+                        <input type="radio" id="Female" name="StudentGender" value="F" checked required />
+                        <label for="Female">Female</label>
+                    }
                 </td>
             </tr>
         </table>
         <br />
         <table align="center">
             <tr>
-                <td style="position: absolute; margin-left: -200px;"><a href="/Student/Create" class="blue-link">Reset</a></td>
-                <td style="position: absolute; margin-left: 110px;"><a href="#" class="blue-button" onclick="this.closest('form').submit(); return false;">Create</a></td>
+                <td style="position: absolute; margin-left: -200px;"><a href="/Student/Read" class="blue-link">Back</a></td>
+                <td style="position: absolute; margin-left: 110px;"><a href="#" class="blue-button" onclick="this.closest('form').submit(); return false;">Update</a></td>
             </tr>
         </table>
         <br />
         <br />
         <br />
         <br />
-        if (ViewBag.Status == "added")
+        if (ViewBag.Status == "updated")
         {
-            <h6 style="text-align:center">Student Record Added</h6>
-            ViewBag.Status = null;
+            <h6 style="text-align:center">Student Record Updated</h6>
         }
     }
 </div>
+
+

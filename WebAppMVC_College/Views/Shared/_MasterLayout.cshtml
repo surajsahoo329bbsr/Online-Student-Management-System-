@@ -25,20 +25,20 @@
             <a style="color:#000000; font-size:24px; text-decoration: none;" class="navbar-brand js-scroll-trigger" href="#page-top">College</a><button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                    <li><a style="color:#000000; font-size:24px; text-decoration: none;" class="nav-link js-scroll-trigger" href="#about">Create</a></li>
-                    <li><a style="color:#000000; font-size:24px; text-decoration: none;" class="nav-link js-scroll-trigger" href="#about">Read</a></li>
-                    <li><a style="color:#000000; font-size:24px; text-decoration: none;" class="nav-link js-scroll-trigger" href="#about">Update</a></li>
-                    <li><a style="color:#000000; font-size:24px; text-decoration: none;" class="nav-link js-scroll-trigger" href="#about">Delete</a></li>
+                    <li><a style="color:#000000; font-size:24px; text-decoration: none; margin-top:5px;" class="nav-link js-scroll-trigger" href="@Url.Action("Create","Student", Session["AdminModel"])">Create</a></li>
+                    <li><a style="color:#000000; font-size:24px; text-decoration: none; margin-top:5px;" class="nav-link js-scroll-trigger" href="@Url.Action("Read","Student", Session["AdminModel"])" )>Read</a></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li class="nav-item"><a class="btn btn-primary btn-xl js-scroll-trigger" href="~/Admin/StartPage">Sign Out</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <section style="margin-top:100px;">
+    <section style="margin-top:150px; margin-bottom:350px;">
         @RenderBody()
     </section>
-    <!-- Contact-->
-    <section class="page-section" id="contact">
-        <div class="container">
+    <!-- Footer-->    
+    <footer class="bg-light py-5">
+         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 text-center">
                     <h2 class="mt-0">Let's Get In Touch!</h2>
@@ -55,11 +55,8 @@
                     <i class="fas fa-envelope fa-3x mb-3 text-muted"></i><!-- Make sure to change the email address in BOTH the anchor text and the link target below!--><a class="d-block" href="mailto:contact@yourwebsite.com">surajsahoo329bbsr@gmail.com</a>
                 </div>
             </div>
+            <div style="font-size:16px; margin-top:40px;" class="small text-center text-muted">Copyright © 2020 - College</div>
         </div>
-    </section>
-    <!-- Footer-->
-    <footer class="bg-light py-5">
-        <div class="container"><div class="small text-center text-muted">Copyright © 2020 - College</div></div>
     </footer>
     <!-- Bootstrap core JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
