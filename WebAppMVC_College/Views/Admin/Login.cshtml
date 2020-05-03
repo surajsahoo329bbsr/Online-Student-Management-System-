@@ -126,17 +126,19 @@
                 <tr>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="AdminEmail" name="AdminEmail" class="input-area" pattern="^([a-zA-Z0-9_\-\.]+)\u0040([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" required />
-                            <label for="AdminEmail" class="label">Email</label>
+                            @Html.TextBoxFor(model => model.AdminEmail, new { @class = "input-area" })
+                            @Html.LabelFor(model => model.AdminEmail, new { @class = "label" })
+                            @Html.ValidationMessageFor(model => model.AdminEmail, "", new { @style = "color: red" })
                         </div>
                     </td>
                 </tr>
-                <tr><td><br /></td></tr>
+                <tr><td>&nbsp;</td></tr>
                 <tr>
                     <td>
                         <div class="input-group">
-                            <input type="password" id="AdminPassword" name="AdminPassword" pattern="^[a-zA-Z0-9]{8,20}$" class="input-area" required />
-                            <label for="AdminPassword" class="label">Password</label>
+                            @Html.PasswordFor(model => model.AdminPassword, new { @class = "input-area" })
+                            @Html.LabelFor(model => model.AdminPassword, new { @class = "label" })
+                            @Html.ValidationMessageFor(model => model.AdminPassword, "", new { @style = "color: red" })
                         </div>
                     </td>
                 </tr>

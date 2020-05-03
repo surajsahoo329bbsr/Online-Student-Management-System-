@@ -115,13 +115,14 @@
     <h2 style="font-size:40px; margin-left:20px; font-weight: bold;">Update</h2>
     @using (Html.BeginForm("Update", "Student", FormMethod.Post))
     {
-        <input type="text" id="StudentId" name="StudentId" value="@Model.StudentId" hidden />
+        @Html.HiddenFor(model => model.StudentId)
         <table align="center" style="margin-top:20px;margin-bottom:20px;">
             <tr>
                 <td>
                     <div class="input-group">
-                        <input type="text" id="StudentName" name="StudentName" class="input-area" pattern="^[a-zA-Z ]{1-50}$" value="@Model.StudentName" required/>
-                        <label for="StudentName" class="label">Name</label>
+                        @Html.TextBoxFor(model => model.StudentName, new { @class = "input-area" })
+                        @Html.LabelFor(model => model.StudentName, new { @class = "label" })
+                        @Html.ValidationMessageFor(model => model.StudentName, "", new { @style = "color: red" })
                     </div>
                 </td>
             </tr>
@@ -129,8 +130,9 @@
             <tr>
                 <td>
                     <div class="input-group">
-                        <input type="text" id="StudentPhoneNo" name="StudentPhoneNo" class="input-area" pattern="^[789]{1}[0-9]{9}$" value="@Model.StudentPhoneNo" required />
-                        <label for="StudentPhoneNo" class="label">Phone Number</label>
+                        @Html.TextBoxFor(model => model.StudentPhoneNo, new { @class = "input-area" })
+                        @Html.LabelFor(model => model.StudentPhoneNo, new { @class = "label" })
+                        @Html.ValidationMessageFor(model => model.StudentPhoneNo, "", new { @style = "color: red" })
                     </div>
                 </td>
             </tr>
@@ -140,22 +142,7 @@
             </tr>
             <tr>
                 <td style="font-size:20px;">
-                    &nbsp;
-                    @if (Model.StudentGender == "M")
-                    {
-                        <input type="radio" id="Male" name="StudentGender" value="M" checked required />
-                        <label for="Male">Male&nbsp;&nbsp;</label>
-                        <input type="radio" id="Female" name="StudentGender" value="F" required />
-                        <label for="Female">Female</label>
-
-                    }
-                    @if (Model.StudentGender == "F")
-                    {
-                        <input type="radio" id="Male" name="StudentGender" value="M" required />
-                        <label for="Male">Male&nbsp;&nbsp;</label>
-                        <input type="radio" id="Female" name="StudentGender" value="F" checked required />
-                        <label for="Female">Female</label>
-                    }
+                    @Html.DropDownListFor(model => model.StudentGender, new SelectList(Enum.GetValues(typeof(WebAppMVC_College.models.GenderType))), "Select Gender")
                 </td>
             </tr>
         </table>

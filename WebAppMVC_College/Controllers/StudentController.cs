@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -8,6 +10,7 @@ using WebAppMVC_College.models;
 
 namespace WebAppMVC_College.Controllers
 {
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public class StudentController : Controller
     {
         // GET: Student
@@ -24,15 +27,25 @@ namespace WebAppMVC_College.Controllers
         [HttpPost]
         public ActionResult Create(Student student)
         {
-            CollegeContext collegeContext = new CollegeContext();
-            student.AdminId = int.Parse(Session["AdminId"].ToString());
-            collegeContext.Students.Add(student);
-            if (collegeContext.SaveChanges() > 0)
+            if (ModelState.IsValid)
             {
-                ViewBag.Status = "added";
+                CollegeContext collegeContext = new CollegeContext();
+                //student.Photo = ImageToByteArray(Image.FromFile(student.ImageFile.FileName));
+
+                student.AdminId = int.Parse(Session["AdminId"].ToString());
+                collegeContext.Students.Add(student);
+                if (collegeContext.SaveChanges() > 0)
+                {
+                    ViewBag.Status = "added";
+                    return View(student);
+                }
+
+                //ModelState.Clear();
                 return View(student);
             }
-            return View(student);
+
+            return View();
+            
         }
 
         public ActionResult Read()
@@ -50,37 +63,22 @@ namespace WebAppMVC_College.Controllers
         }
 
         [HttpPost]
-        public ActionResult Update(FormCollection form)
+        public ActionResult Update(Student student, FormCollection form)
         {
-            int studentId = int.Parse(form["StudentId"].ToString());
-            string studentName = form["StudentName"].ToString();
-            string studentGender = form["StudentGender"].ToString();
-            long studentPhoneNo = long.Parse(form["StudentPhoneNo"].ToString());
-            int adminId = int.Parse(Session["AdminId"].ToString());
-
-            SqlConnection sqlConn = new SqlConnection(@"Data Source=JOHNDOE-PC\SQLEXPRESS;Initial Catalog=CollegeDB;Integrated Security=True");
-            sqlConn.Open();
-            SqlCommand sqlCmd = new SqlCommand("update Students set StudentName = '"+ studentName + "', StudentPhoneNo = "+ studentPhoneNo + ", StudentGender = '" + studentGender +"', AdminId = "+ adminId +" where StudentId = " + studentId + ";", sqlConn);
-            sqlCmd.ExecuteNonQuery();
-            SqlCommand sqlCmdFetch = new SqlCommand("select * from Students where StudentId = " + studentId + ";", sqlConn);
-            SqlDataReader sdr = sqlCmdFetch.ExecuteReader();
-            Student student = null;
-
-            while (sdr.Read())
+            if (ModelState.IsValid)
             {
-                student = new Student
-                {
-                    StudentId = int.Parse(sdr[0].ToString()),
-                    StudentName = sdr[1].ToString(),
-                    StudentPhoneNo = long.Parse(sdr[2].ToString()),
-                    StudentGender = sdr[3].ToString(),
-                    AdminId = int.Parse(sdr[4].ToString())
-                };
-                ViewBag.Status = "updated";
+                CollegeContext collegeContext = new CollegeContext();
+                Student updateStudent = collegeContext.Students.Find(int.Parse(form["StudentId"]));
+                updateStudent.StudentName = student.StudentName;
+                updateStudent.StudentPhoneNo = student.StudentPhoneNo;
+                updateStudent.StudentGender = student.StudentGender;
+                if(collegeContext.SaveChanges() > 0)
+                    ViewBag.Status = "updated";
+                return View(student);
             }
+
+            return View();
             
-            sqlConn.Close();
-            return View(student);
         }
 
         public ActionResult Delete(int studentId, int adminId)
@@ -102,6 +100,21 @@ namespace WebAppMVC_College.Controllers
             ViewBag.Status = "deleted";
             return View();
         }
+
+        public byte[] ImageToByteArray(Image imageInput)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            imageInput.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+            return memoryStream.ToArray();
+        }
+
+        public Image ByteArrayToImage(byte[] byteArrayInput)
+        {
+            MemoryStream memoryStream = new MemoryStream(byteArrayInput);
+            Image returnImage = Image.FromStream(memoryStream);
+            return returnImage;
+        }
+
 
     }
 }

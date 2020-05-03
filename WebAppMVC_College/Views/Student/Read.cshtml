@@ -23,6 +23,8 @@
         }
 
     table {
+        /*table-layout: fixed;
+        width: 3500px;*/
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
         border: 1px solid black;
         border-collapse: collapse;
@@ -45,7 +47,6 @@
         background-size: cover;
         background-repeat: no-repeat;
     }
-
 </style>
 
 <div>
@@ -62,36 +63,31 @@
 }
 else
 {
-    <table>
-        <tr>
-            <th>Student Id</th>
-            <th>Student Name</th>
-            <th>Phone Number</th>
-            <th>Gender</th>
-            <th>Admin Id</th>
-            <th>Update</th>
-            <th>Delete</th>
-        </tr>
-        @foreach (WebAppMVC_College.models.Student student in Model)
-        {
+    <div style="overflow-x: auto">
+        <table>
             <tr>
-                <td>@student.StudentId</td>
-                <td>@student.StudentName</td>
-                <td>@student.StudentPhoneNo</td>
-                @if (student.StudentGender == "M")
-                {
-                    <td>Male</td>
-                }
-                else
-                {
-                    <td>Female</td>
-                }
-                <td>@student.AdminId</td>
-                <td><a href="@Url.Action("Update","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Update</a></td>
-                <td><a href="@Url.Action("Delete","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Delete</a></td>
+                <th>Student Id</th>
+                <th>Student Name</th>
+                <th>Phone Number</th>
+                <th>Gender</th>
+                <th>Admin Id</th>
+                <th>Update</th>
+                <th>Delete</th>
             </tr>
-        }
+            @foreach (WebAppMVC_College.models.Student student in Model)
+            {
+                <tr>
+                    <td>@student.StudentId</td>
+                    <td>@student.StudentName</td>
+                    <td>@student.StudentPhoneNo</td>
+                    <td>@Html.DisplayFor(item => student.StudentGender)</td>
+                    <td>@student.AdminId</td>
+                    <td><a href="@Url.Action("Update","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Update</a></td>
+                    <td><a href="@Url.Action("Delete","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Delete</a></td>
+                </tr>
+            }
+        </table>
+    </div>
 
-    </table>
 }
 

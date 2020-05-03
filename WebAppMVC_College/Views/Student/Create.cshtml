@@ -38,7 +38,7 @@
 
         .input-group .input-area {
             border: 1px solid #03A9F4;
-            padding: 30px 12px;
+            padding: 25px 12px;
             font-size: 20px;
             width: 400px;
             height: 24px;
@@ -123,8 +123,9 @@
             <tr>
                 <td>
                     <div class="input-group">
-                        <input type="text" id="StudentName" name="StudentName" class="input-area" pattern="^[a-zA-Z ]{1-50}$" required />
-                        <label for="StudentName" class="label">Name</label>
+                        @Html.TextBoxFor(model => model.StudentName, new { @class = "input-area" })
+                        @Html.LabelFor(model => model.StudentName, new { @class = "label" })
+                        @Html.ValidationMessageFor(model => model.StudentName, "", new { @style = "color: red" })
                     </div>
                 </td>
             </tr>
@@ -132,8 +133,9 @@
             <tr>
                 <td>
                     <div class="input-group">
-                        <input type="text" id="StudentPhoneNo" name="StudentPhoneNo" class="input-area" pattern="^[789]{1}[0-9]{9}$" required />
-                        <label for="StudentPhoneNo" class="label">Phone Number</label>
+                        @Html.TextBoxFor(model => model.StudentPhoneNo, new { @class = "input-area" })
+                        @Html.LabelFor(model => model.StudentPhoneNo, new { @class = "label" })
+                        @Html.ValidationMessageFor(model => model.StudentPhoneNo, "", new { @style = "color: red" })
                     </div>
                 </td>
             </tr>
@@ -143,10 +145,21 @@
             </tr>
             <tr>
                 <td style="font-size:20px;">
-                    &nbsp; <input type="radio" name="StudentGender" value="M" required  /> Male
-                    &nbsp; &nbsp; <input type="radio" name="StudentGender" value="F" required /> Female
+                    @Html.DropDownListFor(model => model.StudentGender, new SelectList(Enum.GetValues(typeof(WebAppMVC_College.models.GenderType))), "Select Gender")
                 </td>
             </tr>
+            <tr>
+                <td>@Html.ValidationMessageFor(model => model.StudentGender, "", new { @style = "color: red" })</td>
+            </tr>
+            <!--tr><td>&nbsp;</td></!--tr>
+            <tr>
+                <td style="font-size:20px;">&nbsp; Upload Photo</td>
+            </tr>
+            <tr>
+                <td style="font-size:20px;">
+                    &nbsp; <input type="file" id="Photo" name="Photo" class="input-area" required />
+                </td>
+            </tr-->
         </table>
         <br />
         <table align="center">
