@@ -28,7 +28,7 @@ namespace WebAppMVC_College.models
         [ForeignKey("Admin")]
         public int AdminId { get; set; }
 
-        [NotMapped]
+        [NotMapped, Display(Name = "Upload File"), Required(ErrorMessage ="Please Upload Photo")]
         public HttpPostedFileBase ImageFile { get; set; }
         public virtual Admin Admin { get; set; }
     }

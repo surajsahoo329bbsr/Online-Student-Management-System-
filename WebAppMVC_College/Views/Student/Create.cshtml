@@ -117,7 +117,7 @@
         <h6 style="text-align:center">Student Record Deleted.</h6>
     }
     <h2 style="font-size:40px; margin-left:20px; font-weight: bold;">Create</h2>
-    @using (Html.BeginForm("Create", "Student", FormMethod.Post))
+    @using (Html.BeginForm("Create", "Student", FormMethod.Post, new { enctype= "multipart/form-data"}))
     {
         <table align="center" style="margin-top:20px;margin-bottom:20px;">
             <tr>
@@ -150,6 +150,19 @@
             </tr>
             <tr>
                 <td>@Html.ValidationMessageFor(model => model.StudentGender, "", new { @style = "color: red" })</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        @Html.LabelFor(model => model.ImageFile) &nbsp;
+                        @Html.TextBoxFor(model => model.ImageFile, new { type = "file" })
+                    </div>
+               </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ValidationMessageFor(model => model.ImageFile, "", new { @style = "color: red" })
+                </td>
             </tr>
             <!--tr><td>&nbsp;</td></!--tr>
             <tr>

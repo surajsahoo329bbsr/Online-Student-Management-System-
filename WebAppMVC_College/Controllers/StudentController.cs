@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using WebAppMVC_College.models;
 
@@ -29,19 +26,22 @@ namespace WebAppMVC_College.Controllers
         [HttpPost]
         public ActionResult Create(Student student)
         {
-            
-            string imgPath = @"C:\Users\John Doe\Desktop\profile.jpg";
-            string query = "insert into Students values ('"+student.StudentName+"', '"+student.StudentPhoneNo+"', "+ (int)student.StudentGender + ", ( select * from openrowset(bulk N'"+imgPath+"', single_blob) image ) , " + int.Parse(Session["AdminId"].ToString()) + ");";
+            //if (ModelState.IsValid)
+            //{
+                string imgPath = Path.Combine(Server.MapPath("~/UploadedFiles"), Path.GetFileName(student.ImageFile.FileName));
+                student.ImageFile.SaveAs(imgPath);                
+                string query = "insert into Students values ('" + student.StudentName + "', '" + student.StudentPhoneNo + "', " + (int)student.StudentGender + ", ( select * from openrowset(bulk N'" + imgPath + "', single_blob) image ) , " + int.Parse(Session["AdminId"].ToString()) + ");";
 
-            string connString = ConfigurationManager.ConnectionStrings["CollegeContext"].ConnectionString;
-            using (SqlConnection con = new SqlConnection(connString))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.ExecuteNonQuery();
-                ViewBag.Status = "added";
-                con.Close();
-            }
+                string connString = ConfigurationManager.ConnectionStrings["CollegeContext"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(connString))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.ExecuteNonQuery();
+                    ViewBag.Status = "added";
+                    con.Close();
+                }
+            //}            
 
             return View();
             

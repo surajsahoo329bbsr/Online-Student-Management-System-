@@ -13,6 +13,8 @@ namespace WebAppMVC_College.Controllers
         // GET: Admin
         public ActionResult StartPage()
         {
+            CollegeContext collegeContext = new CollegeContext();
+            collegeContext.Database.CreateIfNotExists();
             return View();
         }
 
