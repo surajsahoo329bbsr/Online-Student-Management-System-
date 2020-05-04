@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
@@ -27,21 +29,18 @@ namespace WebAppMVC_College.Controllers
         [HttpPost]
         public ActionResult Create(Student student)
         {
-            if (ModelState.IsValid)
+            
+            string imgPath = @"C:\Users\John Doe\Desktop\profile.jpg";
+            string query = "insert into Students values ('"+student.StudentName+"', '"+student.StudentPhoneNo+"', "+ (int)student.StudentGender + ", ( select * from openrowset(bulk N'"+imgPath+"', single_blob) image ) , " + int.Parse(Session["AdminId"].ToString()) + ");";
+
+            string connString = ConfigurationManager.ConnectionStrings["CollegeContext"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connString))
             {
-                CollegeContext collegeContext = new CollegeContext();
-                //student.Photo = ImageToByteArray(Image.FromFile(student.ImageFile.FileName));
-
-                student.AdminId = int.Parse(Session["AdminId"].ToString());
-                collegeContext.Students.Add(student);
-                if (collegeContext.SaveChanges() > 0)
-                {
-                    ViewBag.Status = "added";
-                    return View(student);
-                }
-
-                //ModelState.Clear();
-                return View(student);
+                con.Open();
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.ExecuteNonQuery();
+                ViewBag.Status = "added";
+                con.Close();
             }
 
             return View();
@@ -50,9 +49,42 @@ namespace WebAppMVC_College.Controllers
 
         public ActionResult Read()
         {
-            CollegeContext collegeContext = new CollegeContext();
-            List<Student> studentList = collegeContext.Students.ToList();
+            List<Student> studentList = GetStudentDetails();
             return View(studentList);
+        }
+
+        private List<Student> GetStudentDetails()
+        {
+            string query = "select * from Students";
+            List<Student> StudentList = new List<Student>();
+            string constr = ConfigurationManager.ConnectionStrings["CollegeContext"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            StudentList.Add(new Student
+                            {
+                                StudentId = int.Parse(sdr[0].ToString()),
+                                StudentName = sdr[1].ToString(),
+                                StudentPhoneNo = sdr[2].ToString(),
+                                StudentGender = (GenderType) Enum.Parse(typeof(GenderType), sdr[3].ToString()),
+                                StudentPhoto = (byte[])sdr[4],
+                                AdminId = int.Parse(sdr[5].ToString())
+                            });
+                        }
+                    }
+                    con.Close();
+                }
+
+                return StudentList;
+            }
         }
 
         public ActionResult Update(int studentId, int adminId)
@@ -100,21 +132,6 @@ namespace WebAppMVC_College.Controllers
             ViewBag.Status = "deleted";
             return View();
         }
-
-        public byte[] ImageToByteArray(Image imageInput)
-        {
-            MemoryStream memoryStream = new MemoryStream();
-            imageInput.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-            return memoryStream.ToArray();
-        }
-
-        public Image ByteArrayToImage(byte[] byteArrayInput)
-        {
-            MemoryStream memoryStream = new MemoryStream(byteArrayInput);
-            Image returnImage = Image.FromStream(memoryStream);
-            return returnImage;
-        }
-
 
     }
 }

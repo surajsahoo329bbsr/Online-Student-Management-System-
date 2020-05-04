@@ -70,22 +70,27 @@ else
                 <th>Student Name</th>
                 <th>Phone Number</th>
                 <th>Gender</th>
+                <th>Photo</th>
                 <th>Admin Id</th>
                 <th>Update</th>
                 <th>Delete</th>
             </tr>
             @foreach (WebAppMVC_College.models.Student student in Model)
             {
+                string Path = "data:image/png;base64," + Convert.ToBase64String(student.StudentPhoto, 0, student.StudentPhoto.Length);
+
                 <tr>
                     <td>@student.StudentId</td>
                     <td>@student.StudentName</td>
                     <td>@student.StudentPhoneNo</td>
                     <td>@Html.DisplayFor(item => student.StudentGender)</td>
+                    <td> <img alt="" src="@Path" style="height:100px; width:100px;" /></td>
                     <td>@student.AdminId</td>
                     <td><a href="@Url.Action("Update","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Update</a></td>
                     <td><a href="@Url.Action("Delete","Student", new { studentId = student.StudentId, adminId = student.AdminId })" class="blue-link">Delete</a></td>
                 </tr>
             }
+
         </table>
     </div>
 
