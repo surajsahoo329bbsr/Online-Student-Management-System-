@@ -19,29 +19,30 @@ namespace WebAppMVC_College.Controllers
             Session["AdminModel"] = admin;
             Session["AdminId"] = admin.AdminId;
             if (student.StudentName != null)
+            {
+                student.AdminId = int.Parse(Session["AdminId"].ToString());
                 return View("Create", student);
+            }
             return View(student);
         }
 
         [HttpPost]
         public ActionResult Create(Student student)
         {
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 string imgPath = Path.Combine(Server.MapPath("~/UploadedFiles"), Path.GetFileName(student.ImageFile.FileName));
                 student.ImageFile.SaveAs(imgPath);                
                 string query = "insert into Students values ('" + student.StudentName + "', '" + student.StudentPhoneNo + "', " + (int)student.StudentGender + ", ( select * from openrowset(bulk N'" + imgPath + "', single_blob) image ) , " + int.Parse(Session["AdminId"].ToString()) + ");";
 
                 string connString = ConfigurationManager.ConnectionStrings["CollegeContext"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(connString))
-                {
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.ExecuteNonQuery();
-                    ViewBag.Status = "added";
-                    con.Close();
-                }
-            //}            
+                SqlConnection con = new SqlConnection(connString);
+                con.Open();
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.ExecuteNonQuery();
+                ViewBag.Status = "added";
+                con.Close();
+            }            
 
             return View();
             

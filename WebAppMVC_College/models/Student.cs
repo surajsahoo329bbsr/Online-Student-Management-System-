@@ -22,7 +22,7 @@ namespace WebAppMVC_College.models
         [Required(ErrorMessage = "Please Select Gender"), Display(Name ="Gender")]
         public GenderType StudentGender { get; set; }
 
-        [Required(ErrorMessage = "Please Upload Photo"), Display(Name = "Photo")]
+        [Display(Name = "Photo")]
         public byte[] StudentPhoto { get; set; }
 
         [ForeignKey("Admin")]
