@@ -76,28 +76,32 @@ else
         <h2 style="font-size:40px; margin-left:20px; font-weight: bold;">Delete</h2>
         @using (Html.BeginForm("Delete", "Student", FormMethod.Post))
         {
-        <table style="margin-top:20px;margin-bottom:20px; margin-left: 25px;">
-            <tr>
-                <td>Student Id &nbsp;</td>
-                <td>@Model.StudentId</td>
-            </tr>
-            <tr>
-                <td>Student Name &nbsp; </td>
-                <td>@Model.StudentName</td>
-            </tr>
-            <tr>
-                <td>Phone Number &nbsp; </td>
-                <td>@Model.StudentPhoneNo</td>
-            </tr>
-            <tr>
-                <td>Gender</td>
-                <td>@Model.StudentGender</td>
-            </tr>
-            <tr>
-                <td>Admin Id &nbsp; </td>
-                <td>@Model.AdminId</td>
-            </tr>
-        </table>
+            string Path = "data:image/png;base64," + Convert.ToBase64String(Model.StudentPhoto, 0, Model.StudentPhoto.Length);           
+            <table style="margin-top:20px;margin-bottom:20px; margin-left: 25px;">
+                <tr>
+                    <td> <img alt="" src="@Path" style="height:100px; width:100px;" /></td>
+                </tr>
+                <tr>
+                    <td>Student Id &nbsp;</td>
+                    <td>@Model.StudentId</td>
+                </tr>
+                <tr>
+                    <td>Student Name &nbsp; </td>
+                    <td>@Model.StudentName</td>
+                </tr>
+                <tr>
+                    <td>Phone Number &nbsp; </td>
+                    <td>@Model.StudentPhoneNo</td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>@Model.StudentGender</td>
+                </tr>
+                <tr>
+                    <td>Admin Id &nbsp; </td>
+                    <td>@Model.AdminId</td>
+                </tr>
+            </table>
             <br />
             <table align="center">
                 <tr>

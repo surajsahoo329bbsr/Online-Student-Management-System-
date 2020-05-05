@@ -16,13 +16,20 @@
         transition: 0.3s;
         padding: 40px;
         width: 500px;
-        height: 600px;
+        height: 650px;
         position: relative;
         margin-top: 20px;
         margin-bottom: auto;
         margin-left: auto;
         margin-right: auto;
         background-color: #FFFFFF;
+    }
+
+    .dropdown {
+        font-size: 20px;
+        padding: 5px 5px;
+        border-color: #03A9F4;
+        border-radius: 5px;
     }
 
     input:-webkit-autofill,
@@ -113,7 +120,7 @@
 
 <div class="card">
     <h2 style="font-size:40px; margin-left:20px; font-weight: bold;">Update</h2>
-    @using (Html.BeginForm("Update", "Student", FormMethod.Post))
+    @using (Html.BeginForm("Update", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.HiddenFor(model => model.StudentId)
         <table align="center" style="margin-top:20px;margin-bottom:20px;">
@@ -138,11 +145,28 @@
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>
-                <td style="font-size:20px;"> &nbsp; Gender </td>
+                <td style="font-size:18px;color: #03A9F4;">&nbsp;&nbsp;Gender</td>
             </tr>
             <tr>
-                <td style="font-size:20px;">
-                    @Html.DropDownListFor(model => model.StudentGender, new SelectList(Enum.GetValues(typeof(WebAppMVC_College.models.GenderType))), "Select Gender")
+                <td>
+                    @Html.DropDownListFor(model => model.StudentGender, new SelectList(Enum.GetValues(typeof(WebAppMVC_College.models.GenderType))), new { @class = "dropdown" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.ValidationMessageFor(model => model.StudentGender, "", new { @style = "color: red" })</td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td style="font-size:18px;color: #03A9F4;"> &nbsp; @Html.LabelFor(model => model.ImageFile) </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.TextBoxFor(model => model.ImageFile, new { type = "file" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ValidationMessageFor(model => model.ImageFile, "", new { @style = "color: red" })
                 </td>
             </tr>
         </table>

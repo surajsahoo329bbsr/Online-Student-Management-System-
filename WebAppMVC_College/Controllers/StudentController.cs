@@ -32,7 +32,7 @@ namespace WebAppMVC_College.Controllers
             if (ModelState.IsValid)
             {
                 string imgPath = Path.Combine(Server.MapPath("~/UploadedFiles"), Path.GetFileName(student.ImageFile.FileName));
-                student.ImageFile.SaveAs(imgPath);                
+                student.ImageFile.SaveAs(imgPath);
                 string query = "insert into Students values ('" + student.StudentName + "', '" + student.StudentPhoneNo + "', " + (int)student.StudentGender + ", ( select * from openrowset(bulk N'" + imgPath + "', single_blob) image ) , " + int.Parse(Session["AdminId"].ToString()) + ");";
 
                 string connString = ConfigurationManager.ConnectionStrings["CollegeContext"].ConnectionString;
@@ -42,10 +42,10 @@ namespace WebAppMVC_College.Controllers
                 cmd.ExecuteNonQuery();
                 ViewBag.Status = "added";
                 con.Close();
-            }            
+            }
 
             return View();
-            
+
         }
 
         public ActionResult Read()
@@ -75,7 +75,7 @@ namespace WebAppMVC_College.Controllers
                                 StudentId = int.Parse(sdr[0].ToString()),
                                 StudentName = sdr[1].ToString(),
                                 StudentPhoneNo = sdr[2].ToString(),
-                                StudentGender = (GenderType) Enum.Parse(typeof(GenderType), sdr[3].ToString()),
+                                StudentGender = (GenderType)Enum.Parse(typeof(GenderType), sdr[3].ToString()),
                                 StudentPhoto = (byte[])sdr[4],
                                 AdminId = int.Parse(sdr[5].ToString())
                             });
@@ -96,22 +96,25 @@ namespace WebAppMVC_College.Controllers
         }
 
         [HttpPost]
-        public ActionResult Update(Student student, FormCollection form)
+        public ActionResult Update(Student student)
         {
             if (ModelState.IsValid)
             {
-                CollegeContext collegeContext = new CollegeContext();
-                Student updateStudent = collegeContext.Students.Find(int.Parse(form["StudentId"]));
-                updateStudent.StudentName = student.StudentName;
-                updateStudent.StudentPhoneNo = student.StudentPhoneNo;
-                updateStudent.StudentGender = student.StudentGender;
-                if(collegeContext.SaveChanges() > 0)
-                    ViewBag.Status = "updated";
-                return View(student);
+                string imgPath = Path.Combine(Server.MapPath("~/UploadedFiles"), Path.GetFileName(student.ImageFile.FileName));
+                student.ImageFile.SaveAs(imgPath);
+                string query = "update Students set StudentName = '" + student.StudentName + "', StudentPhoneNo = '" + student.StudentPhoneNo + "', StudentGender = " + (int)student.StudentGender + ", StudentPhoto = ( select * from openrowset(bulk N'" + imgPath + "', single_blob) image ) , AdminId = " + int.Parse(Session["AdminId"].ToString()) + " where StudentId = "+student.StudentId+";";
+
+                string connString = ConfigurationManager.ConnectionStrings["CollegeContext"].ConnectionString;
+                SqlConnection con = new SqlConnection(connString);
+                con.Open();
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.ExecuteNonQuery();
+                ViewBag.Status = "updated";
+                con.Close();
             }
 
             return View();
-            
+
         }
 
         public ActionResult Delete(int studentId, int adminId)
