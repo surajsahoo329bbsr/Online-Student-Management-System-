@@ -28,7 +28,7 @@ namespace WebAppMVC_College.models
         [ForeignKey("Admin")]
         public int AdminId { get; set; }
 
-        [NotMapped, Display(Name = "Upload File"), Required(ErrorMessage ="Please Upload Photo")]
+        [NotMapped, Display(Name = "Upload File"), Required(ErrorMessage ="Please Upload Photo"), FileExtensions("jpg,jpeg,png", ErrorMessage = "Please upload image of jpg, jpeg or png format"), MaxFileSize(1 * 1024 * 1024, ErrorMessage = "Max File Size Is 1 MB")]
         public HttpPostedFileBase ImageFile { get; set; }
         public virtual Admin Admin { get; set; }
     }
@@ -38,5 +38,52 @@ namespace WebAppMVC_College.models
         Male,
         Female,
         Others
+    }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    public class FileExtensionsAttribute : ValidationAttribute
+    {
+        private List<string> AllowedExtensions { get; set; }
+
+        public FileExtensionsAttribute(string fileExtensions)
+        {
+            AllowedExtensions = fileExtensions.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        }
+
+        public override bool IsValid(object value)
+        {
+
+            if (value is HttpPostedFileBase file)
+            {
+                var fileName = file.FileName;
+
+                return AllowedExtensions.Any(y => fileName.EndsWith(y));
+            }
+
+            return true;
+        }
+    }
+
+    public class MaxFileSizeAttribute : ValidationAttribute
+    {
+        private readonly int _maxFileSize;
+        public MaxFileSizeAttribute(int maxFileSize)
+        {
+            _maxFileSize = maxFileSize;
+        }
+
+        public override bool IsValid(object value)
+        {
+            if (!(value is HttpPostedFileBase file))
+            {
+                return false;
+            }
+            return file.ContentLength <= _maxFileSize;
+        }
+
+        public override string FormatErrorMessage(string name)
+        {
+            return base.FormatErrorMessage(_maxFileSize.ToString());
+        }
     }
 }

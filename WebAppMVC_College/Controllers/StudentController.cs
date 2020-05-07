@@ -9,7 +9,6 @@ using WebAppMVC_College.models;
 
 namespace WebAppMVC_College.Controllers
 {
-    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public class StudentController : Controller
     {
         // GET: Student
